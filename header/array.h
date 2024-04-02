@@ -25,13 +25,12 @@ template<typename T>
 class array_traits<T, 0> {
 public:
 	class value_type {};
-
 	using reference = T &;
 	using size_type = std::size_t;
 	using pointer = T *;
 
 	static constexpr reference get_ref(const value_type &data, size_type index) noexcept {
-		return const_cast<reference>(nullptr);
+		return *static_cast<T*>(nullptr);
 	}
 
 	static constexpr pointer get_ptr(const value_type &data) noexcept {
@@ -58,9 +57,7 @@ private:
 public:
 	array() = default;
 	array(const array & other) = default;
-	array& operator=(const_reference other) = default;
-	array(array && other) = default;
-	array& operator=(array && other) = default;
+	array& operator=(const array & other) = default;
 
 	reference operator[](size_type index) noexcept {
 		return m_array_traits::get_ref(m_data, index);
@@ -143,7 +140,4 @@ public:
 	}
 
 	~array() = default;
-
-private:
-
 };

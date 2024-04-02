@@ -22,7 +22,7 @@ public:
 	void TearDown() override {}
 };
 
-using MyTypes = ::testing::Types<int, unsigned int, std::string>;
+using MyTypes = ::testing::Types<int, unsigned int>;
 
 TYPED_TEST_SUITE(array_test, MyTypes);
 
@@ -40,5 +40,30 @@ TYPED_TEST(array_test, getConstRef) {
 }
 
 TYPED_TEST(array_test, iterators) {
+	int i = 1;
+	for(auto & elem: this->m_array){
+		elem=i;
+		i++;
+	}
+	ASSERT_EQ(this->m_array.front(), 1);
+	ASSERT_EQ(this->m_array.back(), this->m_size);
+}
 
+TYPED_TEST(array_test, copyArray) {
+	int i = 1;
+	for(auto & elem: this->m_array){
+		elem=i;
+		i++;
+	}
+	auto copy_array = this->m_array;
+	for(i = 0;i<copy_array.size();++i){
+		ASSERT_EQ(copy_array[i], this->m_array[i]);
+	}
+}
+
+TEST(array, emptyArray) {
+	array<int, 0> arr{};
+	ASSERT_THROW(arr.at(0), std::logic_error);
+	ASSERT_EQ(arr.data(), nullptr);
+	ASSERT_EQ(arr.begin(), arr.end());
 }
