@@ -24,7 +24,8 @@ public:
 template<typename T>
 class array_traits<T, 0> {
 public:
-	class value_type { };
+	class value_type {};
+
 	using reference = T &;
 	using size_type = std::size_t;
 	using pointer = T *;
@@ -49,17 +50,17 @@ public:
 	using const_pointer = const value_type *;
 	using iterator = value_type *;
 	using const_iterator = const value_type *;
+
 private:
 	using m_array_traits = array_traits<value_type, SIZE>;
 	typename m_array_traits::value_type m_data;
+
 public:
 	array() = default;
-
-	explicit array(const_reference other) {
-		for (size_type i = 0; i < SIZE; ++i) {
-			m_data[i] = other.m_data[i];
-		}
-	}
+	array(const array & other) = default;
+	array& operator=(const_reference other) = default;
+	array(array && other) = default;
+	array& operator=(array && other) = default;
 
 	reference operator[](size_type index) noexcept {
 		return m_array_traits::get_ref(m_data, index);
@@ -117,6 +118,28 @@ public:
 
 	constexpr const_iterator end() const noexcept {
 		return const_iterator(data() + SIZE);
+	}
+
+	constexpr reference front() noexcept {
+		return *begin();
+	}
+
+	constexpr const_reference front() const noexcept {
+		return m_array_traits::get_ref(m_data, 0);
+	}
+
+	constexpr reference back() noexcept {
+		if (SIZE) {
+			return *(end() - 1);
+		}
+		return *end();
+	}
+
+	constexpr const_reference back() const noexcept {
+		if (SIZE) {
+			return m_array_traits::get_ref(m_data, SIZE - 1);
+		}
+		return m_array_traits::get_ref(m_data, SIZE);
 	}
 
 	~array() = default;
