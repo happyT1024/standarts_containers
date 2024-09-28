@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 
 #include "array_test.h"
+#include "vector_test.h"
 
 int main(int argc, char **argv){
 	::testing::InitGoogleTest(&argc, argv);
